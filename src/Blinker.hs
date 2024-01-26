@@ -2,6 +2,7 @@
 {-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -option #-}
 module Blinker where
 
@@ -48,18 +49,23 @@ topEntity clk rx key0 = txBit
     baud = SNat @115200
     uart' = exposeClockResetEnable (uart baud) clk resetGen enableGen
     (rxWord, txBit, ack) = uart' rx txM
-    txM = (exposeClockResetEnable mealySB clk resetGen enableGen) (uncurry cpu) Nothing (ack,rxWord)
+    txM = (exposeClockResetEnable mealyS clk resetGen enableGen) cpu Listening (CPUIn <$> key0 <*> ack <*> rxWord)
 
-type CpuState = Maybe (BitVector 8)
-cpu :: Bool -> Maybe (BitVector 8) -> State CpuState (Maybe (BitVector 8))
-cpu _ (Just rx) = do
-  put (Just rx)
+
+data CPUIn = CPUIn {
+  key0 :: Bit,
+  ack :: Bool,
+  rx :: Maybe (BitVector 8)
+}
+
+data CPUState = Transmitting (BitVector 8) | Listening deriving (Generic, NFDataX)
+cpu :: CPUIn -> State CPUState (Maybe (BitVector 8))
+cpu CPUIn{rx=Just rx} = do
+  put $ Transmitting $ rx
   return Nothing
 
-cpu True Nothing = do
-  put Nothing
-  return Nothing
+cpu CPUIn{ack=True} = put Listening >> return Nothing
 
-cpu False Nothing = do
-  s <- get
-  return s
+cpu CPUIn{ack=False,rx=Nothing} = get >>= \case 
+  Transmitting s -> return $ Just s
+  Listening -> return Nothing
