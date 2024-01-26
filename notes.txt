@@ -1,0 +1,17 @@
+get the quartus toolchain from nixpkgs
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure nixpkgs#quartus-prime-lite
+
+get clash
+nix shell github:clash-lang/clash-compiler
+
+blink example clash
+https://qbaylogic.com/all/clash/new-clash-fpga-starter/
+
+write a .sof file to the fpga over jtag
+quartus_pgm -m jtag -o "p;blinker.sof"
+
+compile a whole project
+quartus_sh --flow compile blinker
+
+the one i have is:
+Cyclone V 5CGXFC5C6F27C7

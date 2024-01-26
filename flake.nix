@@ -2,9 +2,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    clash-cores = {
+      url = "github:clash-lang/clash-compiler?dir=clash-cores";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, flake-utils, self }:
+  outputs = { clash-cores, nixpkgs, flake-utils, self }:
     flake-utils.lib.eachDefaultSystem (system: 
   let
     name = "Blinker";
@@ -31,6 +35,7 @@
         ver = "1.8.1";
         sha256 = "sha256-/dFgCj9e+gkyyUDAB1n1ukaEnkugCR7cRkP+SFJmjjY=";
       } {};
+        clash-cores = super.callCabal2nix "clash-cores" "${clash-cores}/clash-cores/" { };
       };
     };
     hpkg = pkgs.haskell.lib.overrideCabal (hpkgs.callCabal2nix name src {}) (drv: {

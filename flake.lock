@@ -1,15 +1,33 @@
 {
   "nodes": {
+    "clash-cores": {
+      "flake": false,
+      "locked": {
+        "dir": "clash-cores",
+        "lastModified": 1705612353,
+        "narHash": "sha256-rdoIaLLOlZKTL7mFj6KVfo8WfRNB2Z0kldMCLI1OMDI=",
+        "owner": "clash-lang",
+        "repo": "clash-compiler",
+        "rev": "5e01ae2aec13f7b91cc8a6f5475feb4f24bf50b5",
+        "type": "github"
+      },
+      "original": {
+        "dir": "clash-cores",
+        "owner": "clash-lang",
+        "repo": "clash-compiler",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1694529238,
-        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
+        "lastModified": 1705309234,
+        "narHash": "sha256-uNRRNRKmJyCRC/8y1RqBkqWBLM034y4qN7EprSdmgyA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
+        "rev": "1ef2e671c3b0c19053962c07dbda38332dcebf26",
         "type": "github"
       },
       "original": {
@@ -20,11 +38,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1699781429,
-        "narHash": "sha256-UYefjidASiLORAjIvVsUHG6WBtRhM67kTjEY4XfZOFs=",
+        "lastModified": 1705496572,
+        "narHash": "sha256-rPIe9G5EBLXdBdn9ilGc0nq082lzQd0xGGe092R/5QE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e44462d6021bfe23dfb24b775cc7c390844f773d",
+        "rev": "842d9d80cfd4560648c785f8a4e6f3b096790e19",
         "type": "github"
       },
       "original": {
@@ -36,6 +54,7 @@
     },
     "root": {
       "inputs": {
+        "clash-cores": "clash-cores",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
       }
