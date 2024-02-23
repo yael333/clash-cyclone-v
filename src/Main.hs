@@ -4,7 +4,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -option #-}
-module Blinker where
+module Main where
 
 import Clash.Prelude
 import Clash.Annotations.SynthesisAttributes
@@ -17,7 +17,7 @@ createDomain vSystem{vName="Input", vPeriod=20_000}
 
 {-# ANN topEntity
   (Synthesize
-    { t_name   = "Blinker"
+    { t_name   = "Main"
     , t_inputs = [
       PortName "CLK0",
       PortName "UART_RX"
