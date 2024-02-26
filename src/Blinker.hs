@@ -55,12 +55,12 @@ topEntity ::
                 "chip_pin" "L9"
     `Annotate` 'StringAttr
                 "altera_attribute" "-name IO_STANDARD \"2.5V\""
-    ,"I2C_SCL" ::: BiSignalIn 'PullUp Input (BitSize Bit)
+    ,"I2C_SCL" ::: BiSignalOut 'PullUp Input (BitSize Bit)
     `Annotate` 'StringAttr
                 "chip_pin B7"
     `Annotate` 'StringAttr
                 "altera_attribute" "-name IO_STANDARD \"2.5V\""
-    ,"I2C_SDA" ::: BiSignalIn 'PullUp Input (BitSize Bit)
+    ,"I2C_SDA" ::: BiSignalOut 'PullUp Input (BitSize Bit)
     `Annotate` 'StringAttr
                 "chip_pin G11"
     `Annotate` 'StringAttr
@@ -72,7 +72,8 @@ topEntity clk rx key0 sclIn sdaIn = (txBit,sclOut,sdaOut)
     uart' = exposeClockResetEnable (uart baud) clk resetGen enableGen
     (rxWord, txBit, ackUART) = uart' rx txM
     (sclOut, sdaOut, ackI2C) = exposeClockResetEnable (i2cMaster (SNat @20_000) i2cM sclIn sdaIn) clk resetGen enableGen
-    (txM,i2cM) = exposeClockResetEnable mealyS clk resetGen enableGen cpu Initialization (CPUIn <$> key0 <*> (ackUART,ackI2C) <*> rxWord)
+    f = exposeClockResetEnable mealyS clk resetGen enableGen cpu Initialization (CPUIn <$> key0 <*> ackUART <*> ackI2C <*> rxWord)
+    (txM,i2cM) = unbundle f
 
 
 data CPUIn = CPUIn {
@@ -91,7 +92,7 @@ data CPUState = Initialization
                 deriving (Generic, NFDataX)
 cpu :: CPUIn -> State CPUState CPUOut
 cpu CPUIn{rx=Just rx} = do
-  put $ Transmitting rx
+  put $ TransmittingUART rx
   return (Nothing, Nothing)
 
 cpu CPUIn{ackUART=True} = put Listening >> return (Nothing, Nothing)
