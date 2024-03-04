@@ -11,7 +11,7 @@
   outputs = { clash-cores, nixpkgs, flake-utils, self }:
     flake-utils.lib.eachDefaultSystem (system: 
   let
-    name = "Blinker";
+    name = "Project";
     family = "Cyclone V";
     device = "5CGXFC5C6F27C7";
     hdl = "vhdl";
@@ -79,7 +79,7 @@
       } ''
         mkdir $out
         ln -s $src/* .
-        # quartus_map --read_settings_files=on --write_settings_files=off Blinker -c Blinker
+        # quartus_map --read_settings_files=on --write_settings_files=off Project -c Project
         quartus_sh --flow compile ${name}
         cp -r * $out
       '';

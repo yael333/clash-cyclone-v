@@ -1,3 +1,5 @@
 result
 .direnv
 dist-newstyle
+.vscode
+docs/Gergő Retrocomputing with Clash_ Haskell for FPGA Hardware Design (2021).pdf
